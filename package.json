@@ -1,0 +1,21 @@
+{
+  "name": "pagar.te",
+  "version": "1.0.0",
+  "description": "Sample PSP system",
+  "main": "web/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2",
+    "sinon": "^7.5.0",
+    "sinon-chai": "^3.3.0"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "author": "Danilo S. Morães",
+  "license": "MIT"
+}
