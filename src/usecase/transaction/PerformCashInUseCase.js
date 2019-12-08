@@ -4,30 +4,47 @@ const { Transaction } = require("../../entity/Transaction");
 
 class PerformCashInUseCase extends UseCaseCommand {
 
-    constructor(presenter, transactionRepository) {
+    constructor(presenter, transactionRepository, fundsService) {
         super();
         this.presenter = presenter;
         this.transactionRepository = transactionRepository;
+        this.fundsService = fundsService;
     }
 
     async execute(cashInDto) {
 
         try {
-            const transaction = new Transaction;
-
-            const validationErrors = transaction.canCashIn(cashInDto);
-            if(validationErrors.length > 0) {
-                return this.presenter.validationError(validationErrors);
+            if(this.isValid(cashInDto)) {
+                const transaction = new Transaction(cashInDto);
+                await transaction.cashIn(this.fundsService);
+                await this.transactionRepository.add(transaction);
+                return this.returnOk();
             }
-
-            transaction.cashIn(cashInDto);
-            await this.transactionRepository.add(transaction);
-            return this.presenter.ok();
-
-        } catch(error) {
-            return this.presenter.internalError(error.message);
+        } catch(error) {//console.log(error)
+            return this.returnInternalError(error.message);
         }
 
+    }
+
+    isValid(cashInDto) {
+        const validationErrors = Transaction.canCashIn(cashInDto);
+        if(validationErrors.length > 0) {
+            this.returnValidationError(validationErrors);
+            return false;
+        }
+        return true;
+    }
+
+    returnOk(payload) {
+        return this.presenter.ok(payload);
+    }
+
+    returnValidationError(message) {
+        return this.presenter.validationError(message);
+    }
+
+    returnInternalError(message) {
+        return this.presenter.internalError(message);
     }
 }
 

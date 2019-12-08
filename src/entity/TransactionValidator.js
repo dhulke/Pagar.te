@@ -3,7 +3,7 @@
 const { InvalidFieldsDto } = require("./InvalidFieldsDto");
 
 
-class TransactionCashInValidator {
+class TransactionValidator {
 
     constructor(cashInDto) {
         this.cashInDto = cashInDto;
@@ -77,7 +77,6 @@ class TransactionCashInValidator {
         return false;
     }
 
-
     isDigits(field) {
         if(Number.isInteger(field))
             return true;
@@ -97,4 +96,4 @@ class TransactionCashInValidator {
     }
 }
 
-module.exports = { TransactionCashInValidator };
+module.exports = { TransactionValidator };
