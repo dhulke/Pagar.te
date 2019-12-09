@@ -27,3 +27,5 @@ class MemoryDI {
         return useCase;
     }
 }
+
+module.exports = { MemoryDI };

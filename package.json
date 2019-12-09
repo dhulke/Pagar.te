@@ -4,14 +4,18 @@
   "description": "Sample PSP system",
   "main": "web/index.js",
   "directories": {
-    "test": "test"
+    "test": "test/unit"
   },
-  "dependencies": {},
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
     "sinon": "^7.5.0",
-    "sinon-chai": "^3.3.0"
+    "sinon-chai": "^3.3.0",
+    "supertest": "^4.0.2"
   },
   "scripts": {
     "test": "mocha --recursive"

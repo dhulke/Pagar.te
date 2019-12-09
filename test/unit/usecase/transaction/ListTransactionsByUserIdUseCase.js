@@ -6,10 +6,10 @@ const sinon = require("sinon");
 const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 
-const { Presenter } = require("../../../src/usecase/Presenter");
-const { TransactionRepository } = require("../../../src/usecase/transaction/TransactionRepository");
-const { ListTransactionsByUserIdUseCase } = require("../../../src/usecase/transaction/ListTransactionsByUserIdUseCase");
-const { Transaction } = require("../../../src/entity/Transaction");
+const { Presenter } = require("../../../../src/usecase/Presenter");
+const { TransactionRepository } = require("../../../../src/usecase/transaction/TransactionRepository");
+const { ListTransactionsByUserIdUseCase } = require("../../../../src/usecase/transaction/ListTransactionsByUserIdUseCase");
+const { Transaction } = require("../../../../src/entity/Transaction");
 
 
 class TransactionPresenter extends Presenter {

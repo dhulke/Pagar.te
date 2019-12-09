@@ -6,9 +6,9 @@ const sinon = require("sinon");
 const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 
-const { Transaction } = require("../../src/entity/Transaction");
-const { FundsReportService } = require("../../src/service/FundsReportService");
-const { FundsService } = require("../../src/service/FundsService");
+const { Transaction } = require("../../../src/entity/Transaction");
+const { FundsReportService } = require("../../../src/service/FundsReportService");
+const { FundsService } = require("../../../src/service/FundsService");
 
 
 const cashInDto = {
