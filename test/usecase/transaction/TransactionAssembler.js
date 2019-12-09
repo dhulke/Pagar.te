@@ -33,7 +33,6 @@ describe("Transaction Assembler #class", () => {
             const transactionDto = transactionAssembler.mapTransactionToDto(transaction);
 
             const expectedTransactionDto = {
-                userId: cashInDto.userId,
                 value: cashInDto.value,
                 description: cashInDto.description,
                 paymentMethod: cashInDto.paymentMethod

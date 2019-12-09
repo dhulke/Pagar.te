@@ -3,7 +3,7 @@ const { Transaction } = require("../../entity/Transaction");
 const { TransactionAssembler } = require("./TransactionAssembler");
 
 
-class ListTransactionsUseCase extends UseCaseCommand {
+class ListTransactionsByUserIdUseCase extends UseCaseCommand {
 
     constructor(presenter, transactionRepository) {
         super();
@@ -15,16 +15,20 @@ class ListTransactionsUseCase extends UseCaseCommand {
     async execute({ userId }) {
 
         try {
-            this.transactions = await this.transactionRepository.findTransactionsByUserId(userId);
+            await this.findTransactionsForGivenUserId(userId);
             this.mapTransactionsToDto();
-            return this.returnOk();
-        } catch(error) {//console.log(error)
-            return this.returnInternalError(error.message);
+            return this.returnTransactionsDtoToPresenter();
+        } catch(error) {
+            return this.returnInternalErrorToPresenter(error.message);
         }
 
     }
 
-    returnOk() {
+    async findTransactionsForGivenUserId(userId) {
+        this.transactions = await this.transactionRepository.findTransactionsByUserId(userId);
+    }
+
+    returnTransactionsDtoToPresenter() {
         return this.presenter.ok(this.transactionsDto);
     }
 
@@ -36,10 +40,9 @@ class ListTransactionsUseCase extends UseCaseCommand {
         }
     }
 
-
-    returnInternalError(message) {
+    returnInternalErrorToPresenter(message) {
         return this.presenter.internalError(message);
     }
 }
 
-module.exports = { ListTransactionsUseCase };
+module.exports = { ListTransactionsByUserIdUseCase };

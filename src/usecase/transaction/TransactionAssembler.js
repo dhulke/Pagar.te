@@ -4,7 +4,6 @@ class TransactionAssembler {
 
     mapTransactionToDto(transaction) {
         const transactionDto = {};
-        transactionDto.userId = transaction.getUserId().get();
         transactionDto.value = transaction.getValue();
         transactionDto.description = transaction.getDescription();
         transactionDto.paymentMethod = this.mapPaymentMethod(transaction.getPaymentMethod());
