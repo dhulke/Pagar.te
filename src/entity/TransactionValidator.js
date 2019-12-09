@@ -58,10 +58,6 @@ class TransactionValidator {
 
     validateCvv() {
         const cvv = this.cashInDto.cvv;
-        if(!this.isDigits(cvv)) {
-            this.invalidError("cvv", `The cvv field should only contain digits. Found: ${cvv}`);
-            return false;
-        }
         if(cvv.length > 3) {
             this.invalidError("cvv", `The cvv field should only contain 3 digits. Found: ${cvv}`);
             return false;

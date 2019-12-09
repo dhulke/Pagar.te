@@ -15,7 +15,7 @@ class CreditCardPayable extends Payable {
     }
 
     schedule() {
-        const THIRTY_DAYS = 60 * 60 * 24 * 30;
+        const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30;
         const tDate = new Date(this.date);
         this.date = new Date(tDate.getTime() + THIRTY_DAYS);
     }

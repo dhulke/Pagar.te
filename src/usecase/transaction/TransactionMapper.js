@@ -17,7 +17,13 @@ class TransactionMapper {
         dto.value = entity.getValue();
         dto.description = entity.getDescription();
         dto.paymentMethod = this.paymentMethodToDto(entity.getPaymentMethod());
-        dto.cardNumber = entity.getCard().get
+        dto.cardNumber = entity.getCard().getSafeNumber();
+        dto.cardHolderName = entity.getCard().getHolderName();
+        dto.expirationDate = entity.getCard().getExpirationDate();
+        dto.cvv = entity.getCard().getSafeCvv();
+        dto.payables = this.payablesToDto(entity.getPayables());
+        dto.date = this.dateToTimestamp(entity.getDate());
+        return dto;
     }
 
     paymentMethodToDto(paymentMethod) {
@@ -25,6 +31,22 @@ class TransactionMapper {
             [TransactionPaymentMethod.CREDIT_CARD]: "credit_card",
             [TransactionPaymentMethod.DEBIT_CARD]: "debit_card"
         }[paymentMethod];
+    }
+
+    payablesToDto(payables) {
+        const payablesDto = [];
+        for(const payable of payables) {
+            const payableDto = {};
+            payableDto.value = payable.getValue();
+            payableDto.date = this.dateToTimestamp(payable.getDate());
+            payableDto.status = this.payableStatusToDto(payable.getStatus());
+            payablesDto.push(payableDto);
+        }
+        return payablesDto;
+    }
+
+    dateToTimestamp(date) {
+        return date.getTime() / 1000;
     }
 
     payableStatusToDto(payableStatus) {

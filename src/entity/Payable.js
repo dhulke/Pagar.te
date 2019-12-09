@@ -31,7 +31,8 @@ class Payable {
     }
 
     setStatus(status) {
-        this.status = PayableStatus[status];
+        const upper = status.toUpperCase();
+        this.status = PayableStatus[upper];
     }
 }
 

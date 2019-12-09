@@ -10,6 +10,7 @@ const { Presenter } = require("../../../src/usecase/Presenter");
 const { TransactionRepository } = require("../../../src/usecase/transaction/TransactionRepository");
 const { FundsService } = require("../../../src/service/FundsService");
 const { PerformCashInUseCase } = require("../../../src/usecase/transaction/PerformCashInUseCase");
+const { PayableStatus } = require("../../../src/entity/Payable");
 
 
 class CashInPresenter extends Presenter {
@@ -36,7 +37,7 @@ const cashInDto = (value = 100, paymentMethod = "credit_card") => ({
 
 describe("Perform Cash-In Use Case #unit", () => {
 
-    it("Should save credit_card transaction payable with a 5% fee", async () => {
+    it("Should save credit_card transaction payable with a 5% fee, D+30 and waiting funds status", async () => {
 
         const properDto = cashInDto(100);
 
@@ -53,10 +54,19 @@ describe("Perform Cash-In Use Case #unit", () => {
         const transaction = testRepository.add.getCall(0).args[0];
         const payable = transaction.getPayables()[0];
 
-        expect(payable.getValue()).to.be.equal(95);
+        const THIRTY_DAYS = 1000 * 60 * 60 * 24 * 30;
+        const transactionDate = transaction.getDate().getTime() + THIRTY_DAYS;
+
+        const payableValue = payable.getValue();
+        const payableDate = payable.getDate().getTime();
+        const payableStatus = payable.getStatus();
+
+        expect(payableValue).to.be.equal(95);
+        expect(payableDate).to.be.equal(transactionDate);
+        expect(payableStatus).to.be.equal(PayableStatus.WAITING_FUNDS);
     });
 
-    it("Should save debit_card transaction payable with a 3% fee", async () => {
+    it("Should save debit_card transaction payable with a 3% fee, D+0 and paid status", async () => {
 
         const properDto = cashInDto(100, "debit_card");
 
@@ -73,7 +83,15 @@ describe("Perform Cash-In Use Case #unit", () => {
         const transaction = testRepository.add.getCall(0).args[0];
         const payable = transaction.getPayables()[0];
 
-        expect(payable.getValue()).to.be.equal(97);
+        const transactionDate = transaction.getDate().getTime();
+
+        const payableValue = payable.getValue();
+        const payableDate = payable.getDate().getTime();
+        const payableStatus = payable.getStatus();
+
+        expect(payableValue).to.be.equal(97);
+        expect(payableDate).to.be.equal(transactionDate);
+        expect(payableStatus).to.be.equal(PayableStatus.PAID);
     });
 
     it("Should save card number's last four digits only", async () => {
@@ -117,14 +135,14 @@ describe("Perform Cash-In Use Case #unit", () => {
         mockCashInPresenter.verify();
     });
 
-    it("Should send internal error to presenter, when not providing user id", async () => {
+    it("Should send validation error to presenter, when not providing transaction value", async () => {
 
         const missingValueDto = cashInDto();
-        missingValueDto.userId = undefined;
+        missingValueDto.value = undefined;
 
         const cashInPresenter = new CashInPresenter;
         const mockCashInPresenter = sinon.mock(cashInPresenter);
-        mockCashInPresenter.expects("internalError").once();
+        mockCashInPresenter.expects("validationError").once();
 
         const transactionRepository = new TransactionRepository;
         const mockTransactionRepository = sinon.mock(transactionRepository);
@@ -140,14 +158,14 @@ describe("Perform Cash-In Use Case #unit", () => {
         mockTransactionRepository.verify();
     });
 
-    it("Should send validation error to presenter, when not providing transaction value", async () => {
+    it("Should send internal error to presenter, when not providing user id", async () => {
 
         const missingValueDto = cashInDto();
-        missingValueDto.value = undefined;
+        missingValueDto.userId = undefined;
 
         const cashInPresenter = new CashInPresenter;
         const mockCashInPresenter = sinon.mock(cashInPresenter);
-        mockCashInPresenter.expects("validationError").once();
+        mockCashInPresenter.expects("internalError").once();
 
         const transactionRepository = new TransactionRepository;
         const mockTransactionRepository = sinon.mock(transactionRepository);

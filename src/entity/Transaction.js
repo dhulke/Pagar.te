@@ -2,6 +2,7 @@
 
 const { UserId } = require("./UserId");
 const { Card } = require("./Card");
+const { Payable } = require("./Payable");
 const { CreditCardPayable } = require("./CreditCardPayable");
 const { DebitCardPayable } = require("./DebitCardPayable");
 const { TransactionValidator } = require("./TransactionValidator");
@@ -14,7 +15,7 @@ const TransactionPaymentMethod = {
 
 class Transaction {
 
-    constructor({userId, value, description, paymentMethod, cardNumber, cardHolderName, expirationDate, cvv, payables = []}) {
+    constructor({userId, value, description, paymentMethod, cardNumber, cardHolderName, expirationDate, cvv, date, payables = []}) {
         if(this.constructor.canCashIn({value, description, paymentMethod, cardNumber, cardHolderName, expirationDate, cvv}).length > 0) {
             throw new Error("Transaction Validation Error.")
         }
@@ -24,9 +25,9 @@ class Transaction {
         this.setDescription(description);
         this.setPaymentMethod(paymentMethod);
         this.setCard(cardNumber, cardHolderName, expirationDate, cvv);
+        this.setDate(date);
         this.setPayables(payables);
         this.setInstallments(1);
-        this.setDate();
     }
 
     static canCashIn({value, description, paymentMethod, cardNumber, cardHolderName, expirationDate, cvv}) {
@@ -118,8 +119,8 @@ class Transaction {
         return this.date;
     }
 
-    setDate() {
-        this.date = new Date;
+    setDate(date) {
+        this.date = date ? new Date(date * 1000) : new Date();
     }
 
     getPayables() {
@@ -127,7 +128,12 @@ class Transaction {
     }
 
     setPayables(payables) {
-        this.payables = payables;
+        this.payables = [];
+        for(const {value, date, status} of payables) {
+            const dateObj = new Date(date * 1000);
+            const payable = new Payable(value, dateObj, status);
+            this.payables.push(payable);
+        }
     }
 }
 
