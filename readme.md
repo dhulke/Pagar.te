@@ -38,7 +38,7 @@ uma se conectando a um banco postgres e outra é apenas executar o servidor e j�
 
 #### Memória
 ```
-$ git clone git@github.com:dhulke/Pagarte.git
+$ git clone git@github.com:dhulke/Pagar.te.git
 $ cd Pagarte
 $ npm install
 $ npm test
@@ -49,8 +49,10 @@ $ npm start
 Se já possuir alguma instância do Postgres na máquina, pode apontar o arquivo `db/postgres/knexfile.js` para essa instancia.
 ```
 $ docker run --rm --name pg-docker -e POSTGRES_PASSWORD=docker -p 5432:5432 postgres
-$ knex --knexfile db/postgres/knexfile.js migrate:latest
+$ git clone git@github.com:dhulke/Pagar.te.git
+$ cd Pagarte
 $ npm install
+$ knex --knexfile db/postgres/knexfile.js migrate:latest
 $ npm run testall
 $ npm run startpostgres 
 ```
