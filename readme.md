@@ -78,6 +78,6 @@ $ npm run startpostgres
 ## Todo
 Alguns pontos que deixei pra trás por escolha, mas em produção seria necessário trabalhar:
 * Implementar pool de conexões
-* Reditar as credenciais do git (deixei para facilitar a execução)
+* Retirar as credenciais do git. Deixei porque a aplicação não vai para produção.
 * Tratamento correto de valores monetários. Ao invés de usar float, usar uma biblioteca baseada em int para números fracionários.
  
