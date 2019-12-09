@@ -1,6 +1,10 @@
 class TransactionRepository {
 
-    add(transactionEntity) {
+    async findTransactionsByUserId(userId) {
+
+    }
+
+    async add(transactionEntity) {
 
     }
 }

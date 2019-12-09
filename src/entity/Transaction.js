@@ -1,5 +1,6 @@
 "use strict";
 
+const { UserId } = require("./UserId");
 const { Card } = require("./Card");
 const { CreditCardPayable } = require("./CreditCardPayable");
 const { DebitCardPayable } = require("./DebitCardPayable");
@@ -13,11 +14,12 @@ const TransactionPaymentMethod = {
 
 class Transaction {
 
-    constructor({value, description, paymentMethod, cardNumber, cardHolderName, expirationDate, cvv, payables = []}) {
+    constructor({userId, value, description, paymentMethod, cardNumber, cardHolderName, expirationDate, cvv, payables = []}) {
         if(this.constructor.canCashIn({value, description, paymentMethod, cardNumber, cardHolderName, expirationDate, cvv}).length > 0) {
             throw new Error("Transaction Validation Error.")
         }
 
+        this.setUserId(userId);
         this.setValue(value);
         this.setDescription(description);
         this.setPaymentMethod(paymentMethod);
@@ -67,16 +69,41 @@ class Transaction {
         this.payables.push(payable);
     }
 
+    getUserId() {
+        return this.userId;
+    }
+
+    setUserId(userId) {
+        this.userId = new UserId(userId);
+    }
+
+    getValue() {
+        return this.value;
+    }
+
     setValue(value) {
         this.value = value;
+    }
+
+    getDescription() {
+        return this.description;
     }
 
     setDescription(description) {
         this.description = description;
     }
 
+    getPaymentMethod() {
+        return this.paymentMethod;
+    }
+
     setPaymentMethod(paymentMethod) {
-        this.paymentMethod = TransactionPaymentMethod[paymentMethod];
+        const upper = paymentMethod.toUpperCase();
+        this.paymentMethod = TransactionPaymentMethod[upper];
+    }
+
+    getCard() {
+        return this.card;
     }
 
     setCard(cardNumber, cardHolderName, expirationDate, cvv) {
@@ -87,8 +114,16 @@ class Transaction {
         this.installments = installments;
     }
 
+    getDate() {
+        return this.date;
+    }
+
     setDate() {
         this.date = new Date;
+    }
+
+    getPayables() {
+        return this.payables;
     }
 
     setPayables(payables) {

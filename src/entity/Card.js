@@ -38,7 +38,7 @@ class Card {
     }
 
     setExpirationDate(expirationDate) {
-        this.expirationDate = new Date(expirationDate);
+        this.expirationDate = expirationDate;
     }
 
     getCvv() {

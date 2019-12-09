@@ -14,7 +14,7 @@ class DebitCardPayable extends Payable {
     }
 
     applyFee() {
-        this.value = value * (1 - FEE);
+        this.value = this.value * (1 - FEE);
     }
 }
 

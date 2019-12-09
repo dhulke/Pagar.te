@@ -5,17 +5,29 @@ const PayableStatus = {
 
 class Payable {
     constructor(value, date, status) {
-        this.value = value;
-        this.date = date;
-        this.status = status;
+        this.setValue(value);
+        this.setDate(date);
+        this.setStatus(status);
+    }
+
+    getValue() {
+        return this.value;
     }
 
     setValue(value) {
         this.value = parseFloat(value); //I know
     }
 
+    getDate() {
+        return this.date;
+    }
+
     setDate(date) {
         this.date = new Date(date);
+    }
+
+    getStatus() {
+        return this.status;
     }
 
     setStatus(status) {

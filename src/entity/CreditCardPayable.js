@@ -20,8 +20,8 @@ class CreditCardPayable extends Payable {
         this.date = new Date(tDate.getTime() + THIRTY_DAYS);
     }
 
-    applyFee(value) {
-        this.value = value * (1 - FEE);
+    applyFee() {
+        this.value = this.value * (1 - FEE);
     }
 }
 
