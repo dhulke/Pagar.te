@@ -7,7 +7,7 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 
 const { Transaction } = require("../../../src/entity/Transaction");
-const { TransactionAssembler } = require("../../../src/usecase/transaction/TransactionAssembler");
+const { TransactionMapper } = require("../../../src/usecase/transaction/TransactionMapper");
 
 
 const cashInDto = {
@@ -22,13 +22,13 @@ const cashInDto = {
 };
 
 
-describe("Transaction Assembler #class", () => {
+describe("Transaction Mapper #class", () => {
     describe("#mapTransactionToDto", () => {
 
-        it("Should return proper dto when passing valid transactions", () => {
+        it("Should return presenter dto when passing valid transactions", () => {
 
             const transaction = new Transaction(cashInDto);
-            const transactionAssembler = new TransactionAssembler;
+            const transactionAssembler = new TransactionMapper;
 
             const transactionDto = transactionAssembler.mapTransactionToDto(transaction);
 

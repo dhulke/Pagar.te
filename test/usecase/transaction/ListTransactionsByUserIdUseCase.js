@@ -32,7 +32,7 @@ const cashInDtoGivenValue = value => ({
 
 describe("List Transactions By User Id Use Case #unit", () => {
 
-    it("Should present transaction dto, when providing valid user id with 1 transaction", async () => {
+    it("Should send transaction dto to presenter, when providing valid user id with 1 transaction", async () => {
 
         const cashInDto = cashInDtoGivenValue(100);
         const transaction = new Transaction(cashInDto);
@@ -57,7 +57,7 @@ describe("List Transactions By User Id Use Case #unit", () => {
         expect(transactionDtoGenerated).to.deep.equal(expectedTransactionsDto);
     });
 
-    it("Should present transaction dto, when providing valid user id with 2 transaction", async () => {
+    it("Should send transaction dto to presenter, when providing valid user id with 2 transaction", async () => {
         const cashInDto1 = cashInDtoGivenValue(100);
         const transaction1 = new Transaction(cashInDto1);
         const cashInDto2 = cashInDtoGivenValue(150);

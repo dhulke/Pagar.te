@@ -1,6 +1,6 @@
 const { UseCaseCommand } = require("../UseCaseCommand");
 const { Transaction } = require("../../entity/Transaction");
-const { TransactionAssembler } = require("./TransactionAssembler");
+const { TransactionMapper } = require("./TransactionMapper");
 
 
 class ListTransactionsByUserIdUseCase extends UseCaseCommand {
@@ -33,7 +33,7 @@ class ListTransactionsByUserIdUseCase extends UseCaseCommand {
     }
 
     mapTransactionsToDto(transactions) {
-        const transactionAssembler = new TransactionAssembler;
+        const transactionAssembler = new TransactionMapper;
         for(const transaction of this.transactions) {
             const transactionDto = transactionAssembler.mapTransactionToDto(transaction);
             this.transactionsDto.push(transactionDto);

@@ -22,23 +22,104 @@ class TestRepository extends TransactionRepository {
     async add(transactionEntity) {}
 }
 
-const cashInDto = {
+const cashInDto = (value = 100, paymentMethod = "credit_card") => ({
     userId: "1234",
-    value: 20.50,
+    value: value,
     description: "Smartband XYZ 3.0",
-    paymentMethod: "credit_card",
+    paymentMethod: paymentMethod,
     cardNumber: "0123 4567 8910 1112",
     cardHolderName: "John Doe",
     expirationDate: "12/24",
     cvv: 123
-};
+});
 
 
 describe("Perform Cash-In Use Case #unit", () => {
 
-    it("Should present internal error, when not providing user id", async () => {
+    it("Should save credit_card transaction payable with a 5% fee", async () => {
 
-        const missingValueDto = Object.assign({}, cashInDto);
+        const properDto = cashInDto(100);
+
+        const cashInPresenter = new CashInPresenter;
+        const testRepository = new TestRepository;
+        sinon.stub(testRepository, "add");
+
+        const fundsService = new FundsService;
+        sinon.stub(fundsService, "isFundsAvailable").resolves(true);
+
+        const performCashInUseCase = new PerformCashInUseCase(cashInPresenter, testRepository, fundsService);
+        await performCashInUseCase.execute(properDto);
+
+        const transaction = testRepository.add.getCall(0).args[0];
+        const payable = transaction.getPayables()[0];
+
+        expect(payable.getValue()).to.be.equal(95);
+    });
+
+    it("Should save debit_card transaction payable with a 3% fee", async () => {
+
+        const properDto = cashInDto(100, "debit_card");
+
+        const cashInPresenter = new CashInPresenter;
+        const testRepository = new TestRepository;
+        sinon.stub(testRepository, "add");
+
+        const fundsService = new FundsService;
+        sinon.stub(fundsService, "isFundsAvailable").resolves(true);
+
+        const performCashInUseCase = new PerformCashInUseCase(cashInPresenter, testRepository, fundsService);
+        await performCashInUseCase.execute(properDto);
+
+        const transaction = testRepository.add.getCall(0).args[0];
+        const payable = transaction.getPayables()[0];
+
+        expect(payable.getValue()).to.be.equal(97);
+    });
+
+    it("Should save card number's last four digits only", async () => {
+
+        const properDto = cashInDto();
+
+        const cashInPresenter = new CashInPresenter;
+        const testRepository = new TestRepository;
+        sinon.stub(testRepository, "add");
+
+        const fundsService = new FundsService;
+        sinon.stub(fundsService, "isFundsAvailable").resolves(true);
+
+        const performCashInUseCase = new PerformCashInUseCase(cashInPresenter, testRepository, fundsService);
+        await performCashInUseCase.execute(properDto);
+
+        const transaction = testRepository.add.getCall(0).args[0];
+
+        const expectedLastFourDigits = properDto.cardNumber.slice(-4);
+        expect(transaction.getCard().getSafeNumber()).to.equal(expectedLastFourDigits);
+    });
+
+    it("Should send ok to presenter, when providing proper transaction input", async () => {
+
+        const properDto = cashInDto();
+
+        const cashInPresenter = new CashInPresenter;
+        const mockCashInPresenter = sinon.mock(cashInPresenter);
+        mockCashInPresenter.expects("ok").once();
+
+        const transactionRepository = new TransactionRepository;
+        const repositorySpy = sinon.stub(transactionRepository, "add");
+
+        const fundsService = new FundsService;
+        sinon.stub(fundsService, "isFundsAvailable").resolves(true);
+
+        const performCashInUseCase = new PerformCashInUseCase(cashInPresenter, transactionRepository, fundsService);
+        await performCashInUseCase.execute(properDto);
+
+        expect(repositorySpy).to.have.been.called;
+        mockCashInPresenter.verify();
+    });
+
+    it("Should send internal error to presenter, when not providing user id", async () => {
+
+        const missingValueDto = cashInDto();
         missingValueDto.userId = undefined;
 
         const cashInPresenter = new CashInPresenter;
@@ -59,9 +140,9 @@ describe("Perform Cash-In Use Case #unit", () => {
         mockTransactionRepository.verify();
     });
 
-    it("Should present validation error, when not providing transaction value", async () => {
+    it("Should send validation error to presenter, when not providing transaction value", async () => {
 
-        const missingValueDto = Object.assign({}, cashInDto);
+        const missingValueDto = cashInDto();
         missingValueDto.value = undefined;
 
         const cashInPresenter = new CashInPresenter;
@@ -82,49 +163,9 @@ describe("Perform Cash-In Use Case #unit", () => {
         mockTransactionRepository.verify();
     });
 
-    it("Should present ok, when providing proper transaction input", async () => {
+    it("Should send internal error to presenter, when repository throws error", async () => {
 
-        const properDto = Object.assign({}, cashInDto);
-
-        const cashInPresenter = new CashInPresenter;
-        const mockCashInPresenter = sinon.mock(cashInPresenter);
-        mockCashInPresenter.expects("ok").once();
-
-        const transactionRepository = new TransactionRepository;
-        const repositorySpy = sinon.stub(transactionRepository, "add");
-
-        const fundsService = new FundsService;
-        sinon.stub(fundsService, "isFundsAvailable").resolves(true);
-
-        const performCashInUseCase = new PerformCashInUseCase(cashInPresenter, transactionRepository, fundsService);
-        await performCashInUseCase.execute(properDto);
-
-        expect(repositorySpy).to.have.been.called;
-        mockCashInPresenter.verify();
-    });
-
-    it("Should save transaction value greater than payable value", async () => {
-
-        const properDto = Object.assign({}, cashInDto);
-
-        const cashInPresenter = new CashInPresenter;
-        const testRepository = new TestRepository;
-        sinon.stub(testRepository, "add");
-
-        const fundsService = new FundsService;
-        sinon.stub(fundsService, "isFundsAvailable").resolves(true);
-
-        const performCashInUseCase = new PerformCashInUseCase(cashInPresenter, testRepository, fundsService);
-        await performCashInUseCase.execute(properDto);
-
-        const transaction = testRepository.add.getCall(0).args[0];
-
-        expect(transaction.getValue()).to.be.greaterThan(transaction.getPayables()[0].getValue());
-    });
-
-    it("Should present internal error, when repository throws error", async () => {
-
-        const properDto = Object.assign({}, cashInDto);
+        const properDto = cashInDto();
 
         const cashInPresenter = new CashInPresenter;
         const mockCashInPresenter = sinon.mock(cashInPresenter);
@@ -142,9 +183,9 @@ describe("Perform Cash-In Use Case #unit", () => {
         mockCashInPresenter.verify();
     });
 
-    it("Should present internal error, when funds aren't available", async () => {
+    it("Should send internal error to presenter, when funds aren't available", async () => {
 
-        const properDto = Object.assign({}, cashInDto);
+        const properDto = cashInDto();
 
         const cashInPresenter = new CashInPresenter;
         const mockCashInPresenter = sinon.mock(cashInPresenter);

@@ -1,36 +1,36 @@
 class Card {
 
-    constructor(cardNumber, cardHolderName, expirationDate, cvv) {
-        this.setCardNumber(cardNumber);
-        this.setCardHolderName(cardHolderName);
+    constructor(number, holderName, expirationDate, cvv) {
+        this.setNumber(number);
+        this.setHolderName(holderName);
         this.setExpirationDate(expirationDate);
         this.setCvv(cvv);
     }
 
-    getCardNumber() {
-        return this.cardNumber;
+    getNumber() {
+        return this.number;
     }
 
-    setCardNumber(cardNumber) {
-        this.cardNumber = cardNumber;
-        this.setSafeCardNumber();
+    setNumber(cardNumber) {
+        this.number = cardNumber;
+        this.setSafeNumber();
     }
 
-    getSafeCardNumber() {
-        return this.safeCardNumber;
+    getSafeNumber() {
+        return this.safeNumber;
     }
 
-    setSafeCardNumber() {
-        const trimmed = this.cardNumber.trim();
-        this.safeCreditCardNumber = trimmed.length > 4 ? trimmed.slice(-4) : trimmed;
+    setSafeNumber() {
+        const trimmed = this.number.trim();
+        this.safeNumber = trimmed.length > 4 ? trimmed.slice(-4) : trimmed;
     }
 
-    getCardHolderName() {
-        return this.cardHolderName;
+    getHolderName() {
+        return this.holderName;
     }
 
-    setCardHolderName(cardHolderName) {
-        this.cardHolderName = cardHolderName;
+    setHolderName(cardHolderName) {
+        this.holderName = cardHolderName;
     }
 
     getExpirationDate() {

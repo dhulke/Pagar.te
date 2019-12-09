@@ -33,7 +33,7 @@ const cashInDtoGivenValuePaymentMethod = (value, paymentMethod = "credit_card") 
 
 describe("List Funds By User Id Use Case #unit", () => {
 
-    it("Should present only waiting_funds, given 2 cashed in credit card transactions", async () => {
+    it("Should send only waiting_funds to presenter, given 2 cashed in credit card transactions", async () => {
 
         const fundsService = new FundsService;
         sinon.stub(fundsService, "isFundsAvailable").resolves(true);
@@ -64,7 +64,7 @@ describe("List Funds By User Id Use Case #unit", () => {
         expect(fundsReportDtoGenerated).to.deep.equal(expectedFundsReportDto);
     });
 
-    it("Should present paid and waiting_funds, given credit and debit transactions", async () => {
+    it("Should send paid and waiting_funds to presenter, given credit and debit transactions", async () => {
 
         const fundsService = new FundsService;
         sinon.stub(fundsService, "isFundsAvailable").resolves(true);
