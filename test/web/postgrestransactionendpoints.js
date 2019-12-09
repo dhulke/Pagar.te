@@ -16,10 +16,13 @@ const app = require("../../src/entrypoint/web/app")(postgresDi);
 const knexConfig = require("../../db/postgres/knexfile");
 const knex = require('knex')(knexConfig["unittest"]);
 
-beforeEach(async () => {
+const clearTables = async () => {
     await knex("transaction").del();
     await knex("payable").del();
-});
+}
+
+beforeEach(clearTables);
+afterEach(clearTables);
 
 after(() => {
     postgresDi.shutdown();
