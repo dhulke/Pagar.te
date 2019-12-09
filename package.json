@@ -2,7 +2,7 @@
   "name": "pagar.te",
   "version": "1.0.0",
   "description": "Sample PSP system",
-  "main": "web/index.js",
+  "main": "src/entrypoint/web/index.js",
   "directories": {
     "test": "test/unit"
   },
@@ -20,6 +20,8 @@
     "supertest": "^4.0.2"
   },
   "scripts": {
+    "start": "node src/entrypoint/web/index.js",
+    "startpostgres": "node src/entrypoint/web/index.js postgres",
     "test": "mocha --exclude test/web/postgrestransactionendpoints.js --recursive test",
     "testpostgres": "mocha test/web/postgrestransactionendpoints.js",
     "testall": "mocha --recursive test"
