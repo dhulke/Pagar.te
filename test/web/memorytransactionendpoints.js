@@ -7,7 +7,6 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 const request = require('supertest');
 
-const { Presenter } = require("../../src/usecase/Presenter");
 
 const { MemoryDI } = require("../../src/usecase/transaction/MemoryDI");
 const { MemoryTransactionRepository } = require("../../src/usecase/transaction/MemoryTransactionRepository");
@@ -18,11 +17,6 @@ const app = require("../../src/entrypoint/web/app")(memoryDi);
 beforeEach(() => MemoryTransactionRepository.clearDatabase());
 
 
-class TransactionPresenter extends Presenter {
-    ok(payload) {}
-    validationError(invalidFields) {}
-    internalError(message) {}
-}
 
 const cashInDto = (value = 100, paymentMethod = "credit_card", userId = "1234") => ({
     userId: userId,
@@ -36,7 +30,7 @@ const cashInDto = (value = 100, paymentMethod = "credit_card", userId = "1234") 
 });
 
 
-describe("Web Transaction Use Cases Routes #integration #web", () => {
+describe("Memory Web Transaction Use Cases Routes #integration #web", () => {
 
     it("Should return Ok on test route", async () => {
         await request(app).get('/transaction/test').expect(200).expect({ok:true, message: "it worked"});

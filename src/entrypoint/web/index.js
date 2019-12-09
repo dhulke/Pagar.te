@@ -1,9 +1,15 @@
 require("dotenv").config();
 
-const { MemoryDI } = require("../../usecase/transaction/MemoryDI");
-const diTransactionUseCase = new MemoryDI;
+function getDiTransactionUseCase() {
+    switch(process.argv[2]) {
+        case "postgres":
+            return new (require("../../usecase/transaction/PostgresDI").PostgresDI);
+        default:
+            return new (require("../../usecase/transaction/MemoryDI").MemoryDI)
+    }
+}
 
-var app = require('./app')(diTransactionUseCase);
+var app = require('./app')(getDiTransactionUseCase());
 var http = require('http');
 
 

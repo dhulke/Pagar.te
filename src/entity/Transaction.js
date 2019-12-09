@@ -83,7 +83,7 @@ class Transaction {
     }
 
     setValue(value) {
-        this.value = value;
+        this.value = parseFloat(value);//I know
     }
 
     getDescription() {

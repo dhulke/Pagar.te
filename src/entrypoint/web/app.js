@@ -14,7 +14,6 @@ const { TransactionRouter } = require("./route/TransactionRouter");
 
 module.exports = (diTransactionUseCase) => {
 
-
     const transactionRouter = new TransactionRouter(diTransactionUseCase);
 
     const app = express();
