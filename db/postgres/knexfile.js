@@ -5,7 +5,7 @@ module.exports = {
         client: "postgresql",
         connection: {
             port: "5432",
-            host: "192.168.99.100",
+            host: "localhost",
             database: "postgres",
             user: "postgres",
             password: "docker",
@@ -18,7 +18,7 @@ module.exports = {
         client: "postgresql",
         connection: {
             port: "5432",
-            host: "192.168.99.100",
+            host: "localhost",
             database: "postgres",
             user: "postgres",
             password: "docker",

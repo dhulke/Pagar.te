@@ -48,12 +48,14 @@ $ npm start
 
 #### Postgres
 Se já possuir alguma instância do Postgres na máquina, pode apontar o arquivo `db/postgres/knexfile.js` para essa instancia.
+Se estiver usando docker toolbox, rodando sobre uma máquina virtual, você provavelmente precisará apontar `db/postgres/knexfile.js`
+para o ip da máquina virtual.
 ```
 $ docker run --rm --name pg-docker -e POSTGRES_PASSWORD=docker -p 5432:5432 postgres
 $ git clone git@github.com:dhulke/Pagar.te.git
 $ cd Pagarte
 $ npm install
-$ knex --knexfile db/postgres/knexfile.js migrate:latest
+$ npm run build
 $ npm run testall
 $ npm run startpostgres 
 ```
